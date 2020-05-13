@@ -1,33 +1,39 @@
 ---
-layout: single
-title: "About"
-permalink: /About/
-comments: true
-author_profile: true
+layout: post
+title: How to use Jupyter notebook to analyze data using R on server?
 ---
 
+In my research, I find it more convenient to use Jupyter notebook to analyze data using R on server. You can run code and visualize the results instantly, and no need to download the figures (similar to R markdown)! Here are the steps I followed to make this work. Just for your information. 😊
 
-I am a 5th year PhD student at the Department of Biostatistics, Yale University. My research concentration is designing and developing statistical and machine learning tools for analysis of genomic datasets. I am interested in learning more about state-of-the-art Learning methods, and applying them to solve real world problems.
+## Step 0: Login server
+Login VPN if you are off the LAN of your server.
+In terminal, type `ssh usrname@serveraddress`
 
-这是曾立的个人主页。   
-2013年起我到康州New Haven村就读 Yale 生物统计 PhD，主要研究方向是分析基因数据的统计学习和机器学习方法。对Statistical Learning的理论，实现及应用有浓厚兴趣。       
-热爱运动，在篮球，羽毛球，网球都展现出天赋。喜欢观看足球，但尝试不多。唯一坚持下来的运动是排球，以防守见长，在 Yale 打球曾引得对手惊呼 "He is everywhere!"
+## Step 1: Install Anaconda3 in your working directory (ask your admin)
+## Step 2: Install R within Anaconda3
+In terminal, type:
+`conda create -n r_env r-essentials r-base`
+`conda activate r_env`
+If you want to deactivate the R environment, type:
+`conda deactivate`
+Reference: https://docs.anaconda.com/anaconda/user-guide/tasks/using-r-language/
 
+## Step 3: Prepare R for Jupyter notebook
+In your working directory type
+1. conda update ipython
+2. conda install -c r ipython r-irkernel
+3. (In R) install.packages(c('rzmq','repr','IRkernel','IRdisplay'))
+4. IRkernel::installspec()
+Reference: https://discuss.analyticsvidhya.com/t/how-to-run-r-on-jupyter-ipython-notebooks/5512/4
 
-### Education:
-- **Yale University** (2013 - 2018)   
-  Ph.D of Biostatistics
-- **Peking University** (2009 - 2013)   
-  Bachelor of Mathematics
+## Step 4: Test!
+Create a new notebook on server by typing: 
+`jupyter notebook --no-browser --port=8888`
+then open a new terminal window (shortcut: command+T), and open a mapping
+`ssh -N -f -L localhost:8889:localhost:8888 usrname@serveraddress`
+In your browser, open a new page:
+`localhost:8889`
 
+Now you can see the notebook on your local browser. Click on "New" on top right corner, you can open a new R notebook. After finished using, save everything, click on "Logout", and go back to terminal type "killall ssh" to stop the mapping. 
 
-### Softwares:
-- [**PKB2**](https://github.com/zengliX/PKB2), 2018:      
-	A general kernel-boosting framework. Use clinical features and gene expression from typical cancer genomic study datasets to predict outcomes of interest. Support classification, regression, and survival analysis.
-
-- [**SIFA**](https://github.com/zengliX/SIFA) (tumor **S**ubclone **I**dentification by **F**eature **A**llocation), 2017:            
-	a Bayesian hierarchical model to identify tumor subclones and infer phylogenetic tree from WGS data
- 
-- [**PKB**](https://github.com/zengliX/PKB) (**P**athway-based **K**ernel **B**oosting), 2017:      
-	a boosting framework using gene expression and pathway information for classification
- 
+![_config.yml]({{ site.baseurl }}https://petspruce.com/wp-content/uploads/2020/03/How-to-Train-a-Bengal-Cat.jpeg)
